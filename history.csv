@@ -104,3 +104,24 @@ date_kst,ticker,group,vol_tier,price,per_trailing,per_forward,pct_off_52wk_high,
 2026-09-28,INTC,④,고변동,123.0,,80.91,-13.6,66.9,above,above,1,1,🔗⚠️📰,normal,"그룹④특례:At Loss정상처리(최근2분기 영업이익 모두흑자+1966M/+934M,TTM순손실은 비영업항목추정);FCF혼재(Q2+4450M/Q1-2540M);forward PER소스괴리10.77%(15%p미만,❓없음);d는 EV/EBITDA39.60>34.75로 오히려고평가미충족;애널리스트라벨Buy이나 실제Hold다수(32/49);PT-5.39%;9월+40%급등;RSI경계근접(⚠️67근접);직전★2에서 매도★1로 하락(RSI 70.93→66.90);5회차연속 매수★1"
 2026-09-28,MU,④,고변동,1082.28,24.42,14.71,-13.76,63.2,above,above,1,1,🔗❓,normal,"그룹④:흑자확인(영업이익·FCF 모두 최근2분기 강한흑자);저평가3/4(a39.8%할인,c업종48.81대비-50.0%,d EV/EBITDA17.57<34.75,e미충족);forward PER소스괴리99.32%p(21종목중 최대,❓1건,실적발표9/30임박에 따른 추정치급변 영향추정);밸류트랩 의심 서술(사이클고점우려);4회차연속 매수★1"
 2026-09-28,TEM,③,고변동,85.01,,,-18.51,72.54,above,above,1,2,💧⚠️,normal,"At Loss정상처리;그룹③ d·e중0/2(EV/Sales11.15중간수준,FCF-1.72%);Absolute건전성하한 적용(영업이익·FCF 2분기연속마이너스,Q2GAAP순이익+5.6M은 비영업항목추정,매수★상한★★★,실질영향없음);RSI70대 진입(경계근접⚠️)으로 매도★2;PT-19.35%(라벨Buy와 괴리);5회차연속 매수★1"
+2026-09-30,MSFT,①,표준,508.96,28.35,25.76,-8.08,58.38,above,above,1,1,🔗⚠️,normal,저평가3/4;완전성충분;경계값근접;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,AAPL,①,표준,329.4,38.82,36.76,-4.62,50.88,above,above,1,1,,normal,저평가0/4;완전성충분;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,NVDA,①,표준,227.21,28.94,18.99,-3.94,56.7,above,above,1,1,🔗❓,normal,저평가3/4;완전성충분;❓forward PER 소스괴리;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,AVGO,①,표준,355.1,44.62,20.19,-28.26,45.96,below,below,2,1,🚨🔗❓,normal,저평가1/4;완전성충분;❓forward PER 소스괴리;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,AMD,①,표준,607.57,155.15,54.93,-4.92,65.53,above,above,1,2,🔗❓,normal,저평가1/4;완전성불충분;❓forward PER 소스괴리|신호a;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,ORCL,①,고변동,137.79,20.79,15.56,-57.28,43.07,below,below,1,1,🚨🔗,normal,저평가3/4;완전성충분;Absolute하한;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,PLTR,③,고변동,186.97,160.34,98.85,-9.9,60.37,above,above,1,1,🔗❓,normal,저평가0/2;완전성충분;❓forward PER 소스괴리;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,SMCI,③,고변동,41.02,12.6,9.46,-30.21,56.41,above,above,1,1,🔗💧,normal,저평가1/2;완전성충분;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,CRWV,③,고변동,85.93,,,-43.91,48.93,near,below,1,1,🚨🔗💧,normal,저평가0/2;완전성충분;Absolute하한;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,GOOGL,①,표준,340.92,17.2,25.54,-16.57,47.36,near,near,2,1,🔗❓,normal,저평가2/4;완전성충분;❓forward PER 소스괴리;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,META,①,표준,738.79,26.97,22.16,-5.26,64.54,above,above,1,2,🔗,normal,저평가3/4;완전성충분;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,NFLX,①,표준,70.3,21.81,20.01,-43.7,37.19,below,below,3,1,🚨💧⚠️,normal,저평가1/4;완전성충분;경계값근접;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,BLK,②,표준,1067.94,25.61,17.94,-12.46,44.3,below,near,2,1,💧❓,normal,저평가2/4;완전성충분;❓신호a;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,JPM,②,표준,334.98,14.45,13.89,-8.6,34.7,below,above,2,1,,normal,저평가0/2;완전성충분;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,LLY,①,표준,1184.63,39.77,28.42,-8.36,55.99,near,above,1,1,❓,normal,저평가1/4;완전성충분;❓신호a;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,UNH,①,표준,374.94,24.32,17.76,-18.78,38.99,below,above,3,1,❓⚠️,normal,저평가2/4;완전성충분;❓신호a;경계값근접;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,LMT,①,표준,512.21,19.09,16.8,-25.98,33.75,below,below,3,1,🚨,normal,저평가4/4;완전성충분;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,GE,①,표준,317.89,37.51,37.95,-18.25,40.36,below,below,2,1,🚨⚠️,normal,저평가0/4;완전성충분;경계값근접;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,INTC,④,고변동,115.93,,68.9,-18.56,58.41,above,above,1,1,🔗,normal,저평가0/4;완전성충분;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,MU,④,고변동,1065.08,23.79,7.1,-15.13,59.66,above,above,1,1,🔗📰❓,normal,저평가3/4;완전성충분;❓forward PER 소스괴리;stockanalysis WebFetch경로;분기OI/FCF 미제공
+2026-09-30,TEM,③,고변동,82.58,,,-20.84,67.52,above,above,1,1,💧⚠️,normal,저평가0/2;완전성충분;Absolute하한;경계값근접;stockanalysis WebFetch경로;분기OI/FCF 미제공
