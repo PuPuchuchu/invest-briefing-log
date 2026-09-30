@@ -1,5 +1,24 @@
 # RUN_LOG
 
+## 2026-10-01 (KST) — 8회차
+
+- **실행 결과**: 정상 발송 완료("[투자 스크리닝 브리핑] 2026-10-01", get_message로 21카드·순서·그룹헤더 재검증 완료). 뉴욕 기준 2026-09-30(수) 정규 거래일, 휴장 아님. 데이터는 9/30 종가.
+- **이메일 본문 작업방식**: 7회차 사고 대응으로 카드를 Python으로 구조화 생성(마커·⚠️는 계산값에서 일괄 생성 → 배지/본문 불일치 해소). 다만 htmlBody 전달은 여전히 수동 붙여넣기(약 24KB)라 청크 출력 후 그대로 전달, 발송 후 재조회로 검증.
+- **FRED**: 8개 전부 curl 성공. 금리 3.75~4.00%(6개월 전 3.75→상단 4.00, 9/17 인상), DGS10 5.26%(9/29), VIX 16.04(9/29), CPI +3.35%/근원 +2.45%(2026-08), PCE +3.42%/근원 +3.01%(2026-08 — 7월분에서 갱신).
+- **Regime**: 금리 인상기·VIX 보통(15~20 구간, 7회차 '안정'에서 변경)·장단기 정상(+1.26%p).
+- **Damodaran**: pedata/vebitda 각 1회 조회 성공(데이터 기준 2026-01 — 시차 있음). 컬럼: PER=적자기업제외(aggregate money-making), EV/EBITDA=positive EBITDA firms. 이상치 없음. 매핑: MSFT/ORCL=Software(System&Application), GOOGL/META=Software(Internet), AAPL=Computers/Peripherals, NFLX=Entertainment, LLY=Drugs(Pharma), UNH=Healthcare Support Services, LMT/GE=Aerospace/Defense, 반도체 5종=Semiconductor, BLK=Financial Svcs(Non-bank), JPM=Bank(Money Center). 금융주 EV/EBITDA 비교 제외.
+- **❓ 종목**: forward PER 소스괴리 ≥15%: NVDA 29.4, AVGO 46.9, MU 101.0, AMD 46.1, PLTR 17.7 / a·c 정면반대: AMD, GOOGL(신규; trailing PER이 일회성 이익으로 낮아진 영향 추정), LLY, UNH, BLK. 2건 중첩: AMD만 → 데이터 불충분(상한 ★★, 실질 영향 없음).
+- **Absolute 하한**: ORCL(FCF 2분기 연속 -), CRWV, TEM — 분기 데이터 직접 조회로 확인. SMCI는 FCF Jun26 +719M이라 미해당.
+- **애널리스트 규칙 발동**: 없음(Sell 우세 종목 없음).
+- **고변동군**: 7종목 전원 매수★1(RSI 40 이상). 
+- **⚠️ 경계값 발동**: MSFT, NVDA, META, LMT, BLK, JPM (6종목, 29%).
+- **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
+- **"N회차 연속"**: history.csv(티커당 이전 5행+오늘=6)로 스크립트 계산. MSFT·AAPL·AVGO(★2)·AMD·PLTR·META·UNH·INTC·TEM 6회차, ORCL·SMCI·CRWV·MU 5회차, NVDA 4회차, BLK 4회차(★2), NFLX·LMT·GE·JPM 2회차. 모두 행 수 6 이내.
+- **특이점**: 7회차 대비 GE·NFLX·LMT 등 RSI 하락으로 일부 등급 상승/유지; GOOGL은 ★1로 복귀. MU 실적발표 예정일 9/30(추정) — 📰 마커 부여.
+- **한계/이슈**: (1) Absolute 하한은 ORCL/SMCI/CRWV/TEM만 분기 데이터 조회, 나머지는 TTM 영업이익·FCF 양수로 판단. (2) 0단계 주말 스킵 조건 여전히 없음(이번엔 수요일이라 무관). (3) 경계값 ⚠️ ±3pt 폭 재검토 제안 유지. (4) history.csv note 컬럼은 이번부터 스크립트 생성 요약(저평가 n/d, 플래그, 캡)로 기록. (5) 📰/🔗/💧 마커 기준이 회차마다 수작업이라 고정 리스트 정의 제안.
+- **프롬프트 수정 제안(사용자 검토 필요)**: 주말 스킵 조건 추가, ⚠️ 폭 ±2pt 또는 직전 회차 대비 경계 교차 조건 추가, 마커 🔗/💧 고정 티커 리스트 명시, forward PER 괴리 비교 대상(forecast 페이지 마지막 컬럼) 명시.
+- **새 무료 소스 후보**: Stooq(가격/이동평균 교차검증), SEC EDGAR XBRL frames(분기 영업이익·FCF 직접 확보).
+
 ## 2026-09-28 (KST) — 7회차
 
 - **실행 결과**: 정상 발송 완료(chks7788@gmail.com, 제목 "[투자 스크리닝 브리핑] 2026-09-28"). **[중요, 신규 사고] 최초 발송 시도에서 21개 카드를 htmlBody 파라미터에 수동으로 옮겨 담는 과정 중 순서가 뒤섞이고 TEM 카드 1개가 통째로 누락되는 사고 발생** — 파일(email_body.html, 73KB)이 Read 도구 토큰 한도(25,000)를 넘어 두 번에 나눠 읽었는데, 그 내용을 다시 타이핑하듯 옮기는 과정에서 순서 오류·누락이 생김. 발송 직후 Gmail get_message로 실제 발송 내용을 다시 읽어 대조하다가 (③ 고성장/변동주 헤더가 엉뚱한 위치에 있고 TEM이 없는 것을 확인, 즉시 trash_message로 삭제 후, 이번엔 Bash `sed -n`으로 파일을 15KB 이하 5개 청크로 쪼개 각 청크가 잘림 없이 출력되는지 개별 확인한 뒤 그 내용을 그대로 이어붙여 재발송 → get_message로 재검증(21개 카드 전부, 순서 정상, 그룹헤더 정상 확인) 후 최종 완료. **5회차의 "쉘 치환 문법 오발송" 사고와 유사한 계열의 문제로, 이번엔 "대용량 HTML을 수동 타이핑으로 옮기다 생기는 순서 오류/누락"이 신규 유형으로 확인됨.**
