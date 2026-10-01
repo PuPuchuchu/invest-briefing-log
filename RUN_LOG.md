@@ -1,5 +1,28 @@
 # RUN_LOG
 
+## 2026-10-02 (KST) — 8회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-02"). 발송 후 Gmail get_message로 21개 카드·순서·그룹헤더 전부 대조 확인(7회차 권고 워크플로우 준수: HTML을 파일로 생성 → 청크 출력 → 그대로 전달 → 재조회 검증). **관찰: Gmail이 카드/박스의 background 색상 속성을 제거함(테두리·텍스트는 유지)** — 가독성 영향은 경미.
+- **휴장일 체크**: 뉴욕 기준 2026-10-01(목) 정상 거래일, 통과.
+- **데이터 수집 방식 변경**: 이번엔 에이전트 병렬 대신 **bash curl+Python 스크립트로 stockanalysis.com 5개 페이지(main/statistics/forecast/분기 income/분기 cash-flow) × 21종목을 순차 수집·파싱**(약 5분). **주의: curl에 `-A Mozilla/5.0`를 붙이면 Cloudflare "Just a moment" 403, UA 미지정 기본 curl은 HTTP200** — 다음 회차에도 UA 지정 금지. Alpha Vantage 폴백 0회(data_path 전부 normal). 스크립트가 세션 간 지속되지 않으므로 재작성 필요(fetch/parse/calc/gen 구조).
+- **FRED**: 8개 시리즈 curl 직접조회 성공. CPIAUCSL/CPILFESL 등에 2025-10 결측(셧다운 추정)이 있어 **YoY는 인덱스 위치(-13)가 아니라 날짜(같은 월 전년)로 계산해야 함**(처음 -13 행 방식은 3.71/2.76으로 틀리게 나와 정정 → CPI 3.35/2.45 — 직전 회차와 동일, PCE는 8월분 신규 발표: 헤드라인 3.42/근원 3.01, 직전(7월) 3.70/3.34).
+- **Market Regime**: "금리 인상기(상단 3.75→4.00) · VIX 보통(16.34, 9/30; 직전 안정 14.21 → 15 이상으로 레짐 변경) · 장단기 정상(5.29−4.00=+1.29%p)". VIX 15↓ 조건 비활성(매도★5 불가).
+- **Damodaran**: pedata/vebitda 각 1회 HTTP200, 17종목 재사용, "Aggregate Mkt Cap/Trailing Net Income(only money-making firms)" 컬럼 사용. 매핑: MSFT·ORCL=Software(System&Application) 37.52, AAPL=Computers/Peripherals 34.33, NVDA·AVGO·AMD·INTC·MU=Semiconductor 48.81, GOOGL·META=Software(Internet) 34.82, NFLX=Entertainment 32.46, BLK=Investments&Asset Mgmt 22.99, JPM=Bank(Money Center) 14.17, LLY=Drugs 24.95, UNH=Healthcare Support Services 21.07, LMT·GE=Aerospace/Defense 35.27. 이상치(>60/<5) 없음.
+- **신호 판정 임계값(이번 회차 코드로 고정, 다음 회차에도 동일 적용 권장)**: a 할인≥8%, c·d 업종 대비 ≤-10%(고평가는 ≥+10%), e FCF Yield≥5%, ③그룹 d는 EV/Sales<2x. 별점: ★2=낙폭≤-5%&RSI<50(고변동 40), ★3=낙폭≤-10%&RSI<40(30)&신호≥1, ★4=낙폭≤-15%&RSI<30(20)&신호≥2. RSI가 ★3 요건보다 낮은데 신호가 모자란 경우 ★2로 폴백(GE 9/22 ★1은 이 규칙과 불일치했던 과거 사례).
+- **❓**: forward PER 소스괴리(statistics vs forecast 마지막 추정치 ≥15%): NVDA 30.9, AVGO 45.4, AMD 46.8, PLTR 19.6 / 신호a·c 정면반대: AMD, BLK, LLY, UNH / GOOGL은 trailing<forward 이례적 역전(❓1건). **2건 중첩 = AMD만** → 데이터 불충분—판단보류(실질 영향 없음). MU의 괴리는 이번 12.8%로 ❓ 해제(9/28엔 99.32%, 실적발표 후 추정치 정상화 추정).
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 2분기 연속 -) — 실질 영향 없음. SMCI 미해당(FCF +719M).
+- **등급 변동(9/28 대비)**: 매수★ 상승 — AVGO 2→3, LLY 1→2, 하락 — 없음; 매도★ 하락 — AAPL 2→1, AMD 3→2, 상승 — NVDA 1→2. 애널리스트 규칙 발동 없음(Sell 우세 종목 없음).
+- **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
+- **고변동군**: 7종목 전원 RSI가 완화 임계값에 미달해 매수★1·매도★1. 경계값 ⚠️ 발동: MSFT, NVDA, AVGO, META, NFLX, UNH, LMT (7종목, 33%).
+- **"N회차 연속"**: history.csv 6행(오늘 포함) 직접 계산해 카드에 기재(최대 6회차). RUN_LOG 과거 문구 재사용 없음.
+- **📰 마커**: 뉴스 이벤트 조사는 이번 회차 생략(MU만 9/30 실적 직후로 표기). 1주 내 예정 실적발표 없음(최단 INTC 10/22).
+- **방법론 이슈/제안**: (1) 주말·휴장일 스킵 조건 미반영은 이번 회차엔 해당 없음(평일). (2) ⚠️ ±3pt 발동 33% — ±2pt 또는 직전 대비 경계 통과 조건 제안(8회차째). (3) forecast 페이지 'Forward PE' 행은 회계연도별 값이라 "마지막 비-Upgrade 값=첫 추정연도"로 해석했으나 기준연도 정의가 종목마다 달라 괴리 수치 신뢰도 한계 — 대체 소스(예: Alpha Vantage EARNINGS_ESTIMATES) 검토 가치. (4) 💧·🔗 마커는 종목 고정 목록(🔗: MSFT,NVDA,AVGO,AMD,ORCL,PLTR,SMCI,CRWV,GOOGL,META,INTC,MU / 💧: SMCI,CRWV,TEM,NFLX,BLK)을 사용 — 정의가 프롬프트에 없어 임의 유지 중, 프롬프트에 명시 제안. (5) history.csv note 컬럼은 이번부터 짧은 구조화 문자열(저평가n/m;❓사유;Absolute…;N회차연속)로 기록.
+- **새로 시도할 무료 소스 후보**: 특별한 필요 없음(FRED·stockanalysis·Damodaran으로 21종목 커버).
+
+**프롬프트 업데이트 제안**: ① 주말(뉴욕 기준 토·일) 스킵 조건 추가, ② ⚠️ 경계폭 ±3→±2pt 조정, ③ 🔗/💧 마커 대상 목록 및 신호 임계값(a≥8%, c·d ±10%, e≥5%) 프롬프트에 명문화, ④ 이메일 본문 전송 워크플로우(파일 생성→청크 검증→재조회) 명문화, ⑤ curl 사용 시 User-Agent 지정 금지 메모. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
+
 ## 2026-09-28 (KST) — 7회차
 
 - **실행 결과**: 정상 발송 완료(chks7788@gmail.com, 제목 "[투자 스크리닝 브리핑] 2026-09-28"). **[중요, 신규 사고] 최초 발송 시도에서 21개 카드를 htmlBody 파라미터에 수동으로 옮겨 담는 과정 중 순서가 뒤섞이고 TEM 카드 1개가 통째로 누락되는 사고 발생** — 파일(email_body.html, 73KB)이 Read 도구 토큰 한도(25,000)를 넘어 두 번에 나눠 읽었는데, 그 내용을 다시 타이핑하듯 옮기는 과정에서 순서 오류·누락이 생김. 발송 직후 Gmail get_message로 실제 발송 내용을 다시 읽어 대조하다가 (③ 고성장/변동주 헤더가 엉뚱한 위치에 있고 TEM이 없는 것을 확인, 즉시 trash_message로 삭제 후, 이번엔 Bash `sed -n`으로 파일을 15KB 이하 5개 청크로 쪼개 각 청크가 잘림 없이 출력되는지 개별 확인한 뒤 그 내용을 그대로 이어붙여 재발송 → get_message로 재검증(21개 카드 전부, 순서 정상, 그룹헤더 정상 확인) 후 최종 완료. **5회차의 "쉘 치환 문법 오발송" 사고와 유사한 계열의 문제로, 이번엔 "대용량 HTML을 수동 타이핑으로 옮기다 생기는 순서 오류/누락"이 신규 유형으로 확인됨.**
