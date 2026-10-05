@@ -1,5 +1,25 @@
 # RUN_LOG
 
+## 2026-10-06 (KST) — 9회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-06"). 발송 후 Gmail get_message로 21카드·순서·그룹헤더 대조 완료(누락/뒤섞임 없음). 뉴욕 기준 2026-10-05(월) 정상 거래일(휴장 아님), 종가 데이터 기준.
+- **데이터 수집**: bash curl(UA 미지정)로 FRED 8개·stockanalysis 5페이지×21종목(3병렬 xargs, 실패 0)·Damodaran pedata/vebitda 각 1회 모두 HTTP200. Alpha Vantage 폴백 0회(data_path 전부 normal). 스크래치패드 스크립트(fetch/parse/calc/gen)는 세션 간 비지속이라 재작성함.
+- **FRED/Regime**: 목표금리 3.75~4.00(6개월 전 3.75→상승 중), 10Y 5.28(10/2), VIX 15.31(10/2, 직전 16.34 → 보통 유지), CPI 3.35/2.45(8월), PCE 3.42/3.01(8월), YoY는 날짜 기준 계산. Regime: "금리 인상기·VIX 보통·장단기 정상(+1.28%p)".
+- **Damodaran**: 8회차와 동일 매핑·동일 값(Aggregate Mkt Cap/Trailing NI only money-making 컬럼, EV/EBITDA는 positive-EBITDA 컬럼). UNH EV/EBITDA는 Healthcare Support Services 11.17 사용. 이상치 없음.
+- **❓**: forward PER 소스괴리(forecast 6번째 값 vs statistics): NVDA 32.7, AVGO 51.8, AMD 46.1, PLTR 17.5 / 신호a·c 정면반대: AMD, BLK, LLY, UNH / GOOGL forward>trailing 역전(1건으로 계수; a고평가·c저평가 상충은 동일 원인이라 이중 계수 안 함 — 8회차와 일관). 2건 중첩 = AMD만 → 데이터 불충분—판단보류. MU 괴리 해소(6.03 일치), JPM은 forecast Forward PE 행 열 정렬 불일치로 비교 불가(❓ 아님, 카드에 참고 표기).
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 연속 -) — 실질 영향 없음(전원 ★1). SMCI 미해당(최근 FCF +718M). INTC·MU 그룹④ 특례(At Loss/흑자 확인).
+- **등급 변동(10/02 대비)**: 매수★ 하락 — AVGO 3→1(RSI 40→52), UNH 3→2(RSI 32→47), GOOGL 2→1(RSI 45→52, 낙폭 -15.2%지만 RSI≥50); 상승 — 없음. 매도★: MSFT·NVDA·META·AMD ★2 유지/진입(RSI 60대), AMD 매도★2·RSI 69.24(70 경계). 애널리스트 규칙 발동 없음.
+- **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
+- **고변동군**: 7종목 전원 매수★1·매도★1(RSI 완화 임계 미도달). ⚠️ 발동: AMD, NFLX, LMT, GE (4종목, 19% — 8회차 33%보다 하락).
+- **"N회차 연속"**: history.csv 종목별 6행 + 오늘 = 최대 7회차를 직접 계산(최대 7, RSI 이력 N/10=7). RUN_LOG 과거 문구 재사용 없음. AVGO·GOOGL·UNH는 등급 변동으로 연속 표현 생략.
+- **📰 마커**: 1주 내 실적발표 종목 없음(최단 INTC 10/22) → 미부여.
+- **방법론 이슈/제안**: (1) 마커 정의 🚨는 "현재가가 200일선 -2% 초과 하회"로 이번 코드에서 정의(near=±2%) — 프롬프트 명문화 제안. (2) forecast 페이지 Forward PE 행 해석(6번째 열=첫 추정연도)은 종목별 기준연도 차이로 괴리 수치 신뢰도 한계(JPM은 열 정렬 깨짐) — EARNINGS_ESTIMATES(Alpha Vantage) 대체 검토. (3) 이전 회차 제안(주말 스킵·⚠️ ±2pt·🔗/💧 목록 명문화·curl UA 금지·이메일 전송 워크플로우) 유효. (4) Gmail은 `&#x27;` 등을 정상 변환, 링크 자동변환(stockanalysis.com) 발생 — 무해. (5) 이번엔 브랜치 지시(claude/festive-thompson-4hroga) 따라 main이 아닌 해당 브랜치에 push함 — 프롬프트의 "main push" 문구와 불일치하니 라우틴 설정 확인 요망.
+- **새로 시도할 무료 소스 후보**: Alpha Vantage EARNINGS_ESTIMATES(forward EPS 교차검증).
+
+**프롬프트 업데이트 제안**: 8회차 제안 ①~⑤ 유지 + ⑥ 🚨 정의(200일선 -2% 초과 하회) 및 ma50/ma200 near 기준(±2%) 명문화, ⑦ push 대상 브랜치 명시.
+
+---
+
 ## 2026-10-02 (KST) — 8회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-02"). 발송 후 Gmail get_message로 21개 카드·순서·그룹헤더 전부 대조 확인(7회차 권고 워크플로우 준수: HTML을 파일로 생성 → 청크 출력 → 그대로 전달 → 재조회 검증). **관찰: Gmail이 카드/박스의 background 색상 속성을 제거함(테두리·텍스트는 유지)** — 가독성 영향은 경미.
