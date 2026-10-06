@@ -1,5 +1,29 @@
 # RUN_LOG
 
+## 2026-10-07 (KST) — 9회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-07"). 발송 후 Gmail get_message로 21개 카드·순서·그룹헤더 대조 확인(이상 없음). 이번엔 HTML을 파이썬으로 생성 → 13KB 청크 4개로 출력 → 그대로 전달(7회차 권고 워크플로우 준수).
+- **휴장일 체크**: 뉴욕 기준 2026-10-06(화) 정상 거래일, 통과. 데이터는 10/6 종가(17:34 EDT 실행, 종가 반영 확인). 발송일 KST 10/07.
+- **데이터 수집**: FRED 8개 시리즈·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow × 21종목, 전부 HTTP200)·Damodaran(pedata/vebitda 각 1회, HTTP200) 모두 curl(UA 미지정)로 순차 수집 성공. Alpha Vantage 폴백 0회(data_path 전부 normal). 스크립트(fetch/parse/calc/gen)는 세션 간 지속되지 않으므로 재작성 필요. **분기 영업이익 행은 income 페이지 표에 'Operating Income' 행이 없고 차트 영역의 "Operating Income Growth|값..." 뒤 숫자열을 사용해야 함**(FCF는 cash-flow 페이지 '|Free Cash Flow| | | | |값…' 행).
+- **FRED / Regime**: CPI 헤드라인 +3.35%/근원 +2.45%(2026-08, YoY — 날짜 기준 계산), PCE +3.42%/+3.01%(2026-08), 목표금리 3.75~4.00(상단 6개월 전 3.75→4.00 = 상승 중), 10Y 5.31%(10/5), VIX 15.52(10/5). **Regime: "금리 인상기 · VIX 보통 · 장단기 정상(+1.31%p)"** (직전 회차와 동일).
+- **Damodaran**: 업종 매핑·값은 8회차와 동일(MSFT·ORCL 37.52, AAPL 34.33, 반도체 48.81, GOOGL·META 34.82, NFLX 32.46, BLK 22.99, JPM 14.17, LLY 24.95, UNH 21.07, LMT·GE 35.27). 이상치(>60/<5) 없음. 컬럼: pedata "Aggregate Mkt Cap/Trailing Net Income (only money making firms)", vebitda "Only positive EBITDA firms / EV/EBITDA"(JPM은 NA → d 평가 불가). 카드에 숫자·컬럼 모두 노출(v1.7 규칙).
+- **신호 임계값**(8회차 고정값 그대로): a 할인≥8%, c·d 업종 대비 ≤-10%, e FCF Yield≥5%, ③그룹 d=EV/Sales<2x. 별점: ★2=낙폭≤-5%&RSI<50(고변동 40), ★3=낙폭≤-10%&RSI<40(30)&신호≥1, ★4=낙폭≤-15%&RSI<30(20)&신호≥2. 매도: ★2=RSI 60대(고변동 70대), ★3=RSI 70+(80+)&고평가신호≥1(c·d가 업종 대비 ≥+10% 또는 forward>trailing 8%↑), ★4=+50일선 하향&고평가≥2. 근접(near)=±2%.
+- **❓**: forward PER 소스괴리(statistics vs forecast 마지막 추정치, 상대차≥15%): NVDA 30.1, AVGO 54.1, AMD 50.5, PLTR 18.7(MU 0.2로 해소, GOOGL 13.4로 임계 미만 해소) / 신호a·c 정면반대: AMD, BLK, LLY, UNH / GOOGL trailing<forward 이례적 역전(1건으로 처리). **2건 중첩 = AMD만** → "데이터 불충분—판단보류" 문구 카드 명시, 매수★ 상한 ★★(실질 영향 없음).
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -5,396/-1,873), CRWV·TEM(영업이익·FCF 모두 2분기 연속 -) — 모두 실질 영향 없음(★1). SMCI 미해당(최근 분기 FCF +718.7M), GOOGL(Q2 FCF -5,855 / Q1 +10,116)·BLK·LMT 연속 아님. ④그룹 INTC는 특례(최근 2분기 영업이익 흑자, At Loss 정상처리), MU 흑자.
+- **애널리스트 규칙**: 발동 없음(Sell/Strong Sell 우세 종목 없음; SMCI는 Hold 우세).
+- **등급 변동(10/2 대비)**: 매수★ 하락 — AVGO 3→1(RSI 39.6→58.8 급반등), UNH 3→2(RSI 32→45), GOOGL 2→1(RSI 45→54); 상승 — 없음. 매도★ 상승 — AMD 2→3(RSI 72.2 & c·d 고평가); 하락 — 없음(MSFT·NVDA·META 매도★2 유지).
+- **고변동군**: 7종목 전원 RSI가 완화 임계값 미달 → 매수★1·매도★1. 경계값 ⚠️ 발동: MSFT, NVDA, AVGO, AMD, NFLX (5종목, 24%; 8회차 33%보다 감소).
+- **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
+- **"N회차 연속"**: history.csv의 해당 티커 행(직전 6행)을 뒤에서부터 직접 세어 오늘 포함 N을 계산(최대 7, 카드의 "이력 축적 중(7/10)"과 일치). RUN_LOG 과거 문구 재사용 없음. 계산은 gen/calc 스크립트의 streak() 함수.
+- **📰 마커**: 1주 내 예정 실적발표 없음(stockanalysis 'Est. Earnings' 최단 MSFT·GOOGL·META 10/28) — 뉴스 이벤트 별도 조사는 이번에도 생략.
+- **브랜치 메모**: 세션 지시상 개발 브랜치는 claude/festive-thompson-2d04il이며, 프롬프트 지시(main 푸시)에 따라 main에도 반영.
+- **방법론 이슈/제안**: (1) 주말 스킵 조건 — 이번엔 평일. (2) ⚠️ ±3pt 발동률 24~33%로 여전히 높음 → ±2pt 제안 유지. (3) forecast 페이지 forward PE 마지막 값 비교(괴리 ❓)는 fiscal year 정의 차이에 취약 — Alpha Vantage EARNINGS_ESTIMATES 대체 검토. (4) 🔗/💧 마커 대상 종목이 프롬프트에 없어 고정 목록 사용(🔗: MSFT,NVDA,AVGO,AMD,ORCL,PLTR,SMCI,CRWV,GOOGL,META,INTC,MU / 💧: SMCI,CRWV,TEM,NFLX,BLK) — 명문화 제안. (5) MU FCF Yield 4.99%가 e 임계(5%)에 근소 미달 — 경계 근접 처리 규칙 없음. (6) Gmail은 카드 background 속성 제거(테두리만 유지) — 인지된 한계.
+- **새로 시도할 무료 소스 후보**: 특별한 필요 없음.
+
+**프롬프트 업데이트 제안**: ① 주말(뉴욕 토·일) 스킵 조건 추가, ② ⚠️ 경계폭 ±3→±2pt, ③ 🔗/💧 마커 대상 및 신호 임계값(a≥8%, c·d ±10%, e≥5%, 매도 고평가 신호 정의) 명문화, ④ 이메일 전송 워크플로우(파일 생성→청크 출력→재조회 검증) 명문화, ⑤ curl UA 지정 금지 메모. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
+
 ## 2026-10-02 (KST) — 8회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-02"). 발송 후 Gmail get_message로 21개 카드·순서·그룹헤더 전부 대조 확인(7회차 권고 워크플로우 준수: HTML을 파일로 생성 → 청크 출력 → 그대로 전달 → 재조회 검증). **관찰: Gmail이 카드/박스의 background 색상 속성을 제거함(테두리·텍스트는 유지)** — 가독성 영향은 경미.
