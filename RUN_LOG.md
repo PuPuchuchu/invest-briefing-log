@@ -11,7 +11,7 @@
 - **❓**: forward PER 소스괴리(≥15%): NVDA 28.2, AVGO 45.9, AMD 43.0, PLTR 17.3 / 신호a·c 정면반대: AMD, BLK, LLY, UNH, GOOGL(역전). **2건 중첩 = AMD만** → "데이터 불충분—판단보류" 명시, 매수★ 상한 ★★(실질 영향 없음).
 - **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 연속 -). 실질 영향 없음. SMCI·BLK·LMT·GOOGL 연속 아님. INTC(④) 특례.
 - **애널리스트 규칙**: 발동 없음.
-- **등급 변동(10/12 대비)**: 매수★ 상승 — NVDA 1→2, AVGO 1→2, NFLX 1→2(전회 기록 확인용: history.csv), LMT 3→2 하락(RSI 39.8→41.8로 40 상회), 하락 — LMT 3→2, ORCL 유지. 매도★ — MSFT·PLTR 2 유지, AAPL 1→2, META 1→2(RSI 60 상회).
+- **등급 변동(10/12 대비, history.csv 직접 비교)**: 매수★ NVDA 1→2, AVGO 1→2, LMT 3→2; 매도★ AAPL 1→2, META 1→2.
 - **고변동군**: 임계 충족은 PLTR 매도★2뿐. 경계값 ⚠️ 발동: MSFT, AAPL, GOOGL, META, JPM, LMT, GE (7종목, 33%).
 - **📰**: UNH·JPM(10/13), BLK(10/14).
 - **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
