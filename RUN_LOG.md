@@ -11,7 +11,7 @@
 - **❓**: forward PER 소스괴리(≥15%): NVDA 31.2, AVGO 49.7, AMD 49.1, PLTR 17.1 / 신호a·c 정면반대: AMD, BLK, LLY (UNH는 PER이 업종값과 +3%로 근접해 이번엔 해소) / GOOGL trailing<forward 역전 1건. **2건 중첩 = AMD만** → "데이터 불충분—판단보류" 명시, 매수★ 상한 ★★(실질 영향 없음).
 - **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 2분기 연속 -) — 실질 영향 없음. SMCI·GOOGL·BLK·LMT는 연속 아님. INTC(④) 특례.
 - **애널리스트 규칙**: 발동 없음(Sell 우세 없음).
-- **등급 변동(10/12 대비)**: 매수★ 상승 — AVGO 1→2, LLY 1→2, CRWV 1→2(RSI 38.99, 고변동 <40; Absolute 상한 ★3 이내), BLK 1→2, NFLX 유지(2); 하락 — 없음. 매도★ 상승 — AAPL 1→2(RSI 60.2); 하락 — PLTR 유지(2), AMD 1 유지, 변동 없음 외 NFLX 등 동일.
+- **등급 변동(10/12 대비)**: 매수★ 상승 — AVGO 1→2, BLK 1→2, LLY 1→2, CRWV 1→2(RSI 38.99, 고변동 <40; Absolute 상한 ★3 이내); 하락 — 없음. 매도★ 상승 — AAPL 1→2(RSI 60.2), META 1→2(RSI 66.0); 하락 — 없음(MSFT·PLTR 2 유지).
 - **고변동군**: 7종목 중 PLTR 매도★2, CRWV 매수★2 외 ★1. 경계값 ⚠️ 발동: MSFT, AAPL, GOOGL, JPM, LMT, GE (6종목, 29%).
 - **📰 마커**: BLK(10/14), NFLX·GE(10/20) 예정, UNH·JPM은 10/13 당일 발표(지표 반영 여부 불확실).
 - **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
