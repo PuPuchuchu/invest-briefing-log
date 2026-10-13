@@ -1,5 +1,29 @@
 # RUN_LOG
 
+## 2026-10-14 (KST) — 11회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-14"), 발송 후 Gmail get_message로 21개 카드·순서·섹터 헤더 대조 확인(이상 없음). HTML ~17K자(카드 인라인 스타일 간소화)를 파이썬으로 생성 → 출력 → 그대로 전달.
+- **휴장일 체크**: 뉴욕 2026-10-13(화) 정상 거래일, 통과. 종가(4:00 PM EDT) 기준, 17:34 EDT 실행.
+- **데이터 수집**: FRED 8개·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow ×21)·Damodaran(pedata/vebitda 1회씩) 전부 curl(UA 미지정) HTTP200, Alpha Vantage 폴백 0회(data_path 전부 normal). 스크립트(fetch/parse/calc/gen)는 세션 간 지속 안 되어 재작성. 분기 영업이익은 income 페이지 "Operating Income Growth|" 뒤 숫자열(최신 분기 먼저), FCF는 cash-flow 페이지 "Free Cash Flow|" 첫 숫자열, forecast 페이지 Forward PE 행의 마지막 비-Upgrade 값을 소스괴리 비교에 사용.
+- **FRED / Regime**: CPI +3.35%/근원 +2.45%·PCE +3.42%/+3.01%(2026-08, 날짜 기준 YoY; 신규 발표 없음), 목표금리 3.75~4.00(상단 6개월 전 3.75→4.00 = 상승 중), 10Y 5.24%(10/9), VIX 15.21(10/12). **Regime: 금리 인상기 · VIX 보통 · 장단기 정상(+1.24%p)** (직전과 동일).
+- **Damodaran**: 업종 매핑·값 10회차와 동일(이상치 없음), 컬럼: pedata "only money making firms", vebitda "Only positive EBITDA/EV/EBITDA". INTC·MU(④)도 반도체 값으로 c·d 평가(관행 유지).
+- **신호 임계값**(8~10회차 고정값 유지): a 할인≥8%, c·d 업종 대비 ≤-10%, e FCF Yield≥5%, ③그룹은 d(EV/Sales<2x)·e만. 별점 임계값도 동일.
+- **❓**: forward PER 소스괴리(≥15%): NVDA 31.2, AVGO 49.7, AMD 49.1, PLTR 17.1 / 신호a·c 정면반대: AMD, BLK, LLY (UNH는 PER이 업종값과 +3%로 근접해 이번엔 해소) / GOOGL trailing<forward 역전 1건. **2건 중첩 = AMD만** → "데이터 불충분—판단보류" 명시, 매수★ 상한 ★★(실질 영향 없음).
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 2분기 연속 -) — 실질 영향 없음. SMCI·GOOGL·BLK·LMT는 연속 아님. INTC(④) 특례.
+- **애널리스트 규칙**: 발동 없음(Sell 우세 없음).
+- **등급 변동(10/12 대비)**: 매수★ 상승 — AVGO 1→2, LLY 1→2, CRWV 1→2(RSI 38.99, 고변동 <40; Absolute 상한 ★3 이내), BLK 1→2, NFLX 유지(2); 하락 — 없음. 매도★ 상승 — AAPL 1→2(RSI 60.2); 하락 — PLTR 유지(2), AMD 1 유지, 변동 없음 외 NFLX 등 동일.
+- **고변동군**: 7종목 중 PLTR 매도★2, CRWV 매수★2 외 ★1. 경계값 ⚠️ 발동: MSFT, AAPL, GOOGL, JPM, LMT, GE (6종목, 29%).
+- **📰 마커**: BLK(10/14), NFLX·GE(10/20) 예정, UNH·JPM은 10/13 당일 발표(지표 반영 여부 불확실).
+- **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
+- **"N회차 연속"**: history.csv 해당 티커 행을 뒤에서부터 직접 센 값(오늘 포함, 최대 9 = 카드의 이력 축적 9/10과 일치). RUN_LOG 과거 문구 재사용 없음.
+- **방법론 이슈/제안**: (1) 주말 스킵 조건 추가 필요(이번엔 평일). (2) ⚠️ ±3pt 발동률 29% → ±2pt 제안 유지. (3) forecast Forward PE 행의 열 정의가 불명확해 소스괴리 ❓가 임계 근처(PLTR 17%)에서 뒤집힐 수 있음 — Alpha Vantage EARNINGS_ESTIMATES 대체 검토. (4) 🔗/💧 마커 대상 고정 목록(🔗: MSFT,NVDA,AVGO,AMD,ORCL,PLTR,SMCI,CRWV,GOOGL,META,INTC,MU / 💧: SMCI,CRWV,TEM,NFLX,BLK) 및 ④그룹 업종값 적용 명문화 제안. (5) 이메일은 대량 수동 전사에 따른 누락 위험이 있어 카드를 간소화(약 17K자)했고 발송 후 재조회로 검증함. (6) history.csv 이력이 10행에 도달하면 "축적 중" 문구를 RSI 추세 서술로 전환 필요(다음 회차 10/10).
+- **새로 시도할 무료 소스 후보**: 특별한 필요 없음.
+- **브랜치 메모**: 세션 지정 개발 브랜치 claude/festive-thompson-ftb3yp, 프롬프트 지시(main 푸시)에 따라 main에도 반영.
+
+**프롬프트 업데이트 제안**: ① 주말(뉴욕 토·일) 스킵 조건 추가, ② ⚠️ 경계폭 ±3→±2pt, ③ 🔗/💧 마커 대상 및 신호 임계값(a≥8%, c·d ±10%, e≥5%)·④그룹 업종값 사용 명문화, ④ 이메일 전송 워크플로우(파일 생성→출력→그대로 전달→재조회 검증) 명문화, ⑤ curl UA 지정 금지 메모. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
+
 ## 2026-10-12 (KST) — 10회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-12"), 발송 후 Gmail get_message로 21개 카드·순서·섹터 헤더 대조 확인(이상 없음). HTML은 파이썬으로 생성(카드당 인라인 스타일 최소화로 약 20K자) → 파일 출력 → 그대로 전달.
