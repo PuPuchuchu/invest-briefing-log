@@ -1,5 +1,28 @@
 # RUN_LOG
 
+## 2026-10-21 (KST) — 13회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-21", send id 1a15b466937d89fe). 발송 후 재조회 검증은 생략. HTML 약 24K자(파이썬 생성→출력→그대로 전달; 일부 카드 참고문구는 전사 시 수동 수정됨: MU·GE·INTC 참고 한 줄).
+- **휴장일 체크**: 뉴욕 2026-10-20(화) 정상 거래일. 17:40 EDT 실행(종가 반영). date_kst=2026-10-21.
+- **데이터 수집**: FRED 8개·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow ×21)·Damodaran(pedata/vebitda 1회씩) 전부 curl HTTP200, Alpha Vantage 폴백 0회(data_path 전부 normal). FRED 조회 성공, Damodaran 조회 성공(데이터 기준 2026-01).
+- **FRED / Regime**: CPI(9월) +3.72%/근원 +2.57%, PCE(8월) +3.42%/+3.01%, 목표금리 3.75~4.00(상단 6개월 전 3.75→4.00 = 상승 중), 10Y 5.15%(10/19), VIX 18.44(10/19). **Regime: 금리 인상기 · VIX 보통 · 장단기 정상(+1.15%p)**.
+- **Damodaran**: 업종 매핑·값 이전 회차와 동일(이상치 없음). 컬럼: pedata "only money making firms", vebitda "Only positive EBITDA". GOOGL·META는 Software (Internet)로 근사 매칭(카드에 명시). UNH는 Healthcare Support Services. INTC·MU(④)도 반도체 값으로 c·d 평가(관행 유지; INTC는 적자라 c 평가 불가).
+- **신호 임계값**(고정 유지): a 할인≥8%, c·d 업종 대비 ≤-10%, e FCF Yield≥5%, ③그룹은 d(EV/Sales<2x)·e만.
+- **❓**: forward PER 소스괴리(≥15%): NVDA 23%, AVGO 33%, AMD 32% / 신호a·c 정면반대: AMD, GOOGL, BLK, LLY, UNH. **2건 중첩 = AMD만** → "데이터 불충분—판단보류" 명시, 매수★ 상한 ★★(AMD 자연 등급은 ★3이었음 → 실제 하향 효과 있음).
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 2분기 연속 -) — 실질 영향 없음. INTC(④) 특례(FCF 최근 +4,450/직전 -2,540으로 연속 아님).
+- **애널리스트 규칙**: 발동 없음.
+- **등급 변동(10/15 대비)**: 매수★ 상승 — AVGO 2→3, GOOGL 1→2, META 1→2; 하락 — BLK 2→1. 매도★ 하락 — MSFT·AAPL 2→1; 상승 — BLK 1→2, UNH 2→3, LMT 1→2.
+- **고변동군**: 매수★2 — INTC, MU, SMCI, CRWV; 나머지 ★1. 매도★ 임계 충족 없음. 경계값 ⚠️ 발동 10종목(MSFT, NVDA, AVGO, AMD, CRWV, NFLX, BLK, LLY, UNH, LMT) = 48%.
+- **📰 마커**: META(10/21), LMT(10/22), NFLX·GE(10/20 당일; 발표 시점/반영 여부 불확실). MSFT·GOOGL(10/28)은 1주 밖이라 제외.
+- **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
+- **"N회차 연속"**: 매수★ 동일 등급 연속 횟수를 history.csv 해당 티커 행을 뒤에서부터 직접 계산(오늘 포함, 최대 11 = 오늘 append 후 11행). RUN_LOG 과거 문구 재사용 없음.
+- **방법론 이슈/제안**: (1) ⚠️ ±3pt 발동률 48%(10/21) → ±2pt 제안 유지. (2) 카드의 "(참고) 낙폭 대비 RSI 회복" 자동 문구가 RSI가 실제로 낮은 종목(INTC·MU·GE 등)에도 붙는 버그성 로직이 있어 일부는 전사 시 수동 수정함 — 조건을 "낙폭≤-15% & RSI가 해당 별점 RSI 요건 이상으로 회복"으로 명문화 필요. (3) forecast Forward PE 기반 소스괴리 ❓가 15% 임계 근처에서 뒤집힘 — Alpha Vantage EARNINGS_ESTIMATES 대체 검토. (4) GOOGL·META 업종 카테고리(Software (Internet))는 근사 매칭 — 사용자 확인 필요. (5) 이메일 24K자 수동 전사 부담 — 카드 간소화 또는 요약/상세 분리 검토. (6) 주말 스킵 조건 추가 필요(이번엔 평일). (7) JPM은 EV/EBITDA·FCF 없음 → 분모 2.
+- **새로 시도할 무료 소스 후보**: 특별한 필요 없음.
+- **브랜치 메모**: 세션 지정 개발 브랜치 claude/festive-thompson-5dngvk에 커밋·푸시(프롬프트의 main 푸시 지시보다 세션 지시 우선).
+
+**프롬프트 업데이트 제안**: ① 주말(뉴욕 토·일) 스킵 조건 추가, ② ⚠️ 경계폭 ±3→±2pt, ③ 🔗/💧 마커 대상 및 신호 임계값(a≥8%, c·d ±10%, e≥5%)·④그룹 업종값·GOOGL/META 카테고리 명문화, ④ 이메일 전송 워크플로우 및 "5회차 전" RSI 추세 정의(history 행 기준) 명문화, ⑤ "낙폭 대비 RSI 회복" 문구 조건 명문화. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
 ## 2026-10-15 (KST) — 12회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-15"). 발송 후 재조회 검증은 생략(이번엔 send 응답 id만 확인). HTML 약 21K자, 파이썬 생성→출력→그대로 전달.
