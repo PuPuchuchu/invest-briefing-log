@@ -1,5 +1,27 @@
 # RUN_LOG
 
+## 2026-10-22 (KST) — 13회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-22", Gmail id 1a1606c71c7e5f29). 발송 후 재조회 검증은 생략(send 응답 id만 확인). HTML 약 21K자, 파이썬 생성→출력→그대로 전달.
+- **휴장일 체크**: 뉴욕 2026-10-21(수) 정상 거래일, 17:40 EDT 종가 기준. date_kst=2026-10-22.
+- **⚠️ FRED 조회 실패**: fred.stlouisfed.org가 8개 시리즈 전부 HTTP200이지만 본문이 "Site Maintenance | St. Louis Fed" HTML(점검 페이지)이었고, 재시도(약 20분 간격 2회)도 동일. 도메인 미등록 문제가 아니라 FRED 측 점검. 프롬프트 지시(임시 웹검색 병행)에 따라 대체: 10년물=Alpha Vantage TREASURY_YIELD daily(5.15%, 10/19), CPI 헤드라인=AV CPI(9월 YoY +3.74%, 지수 336.940 vs 324.800), 실효금리=AV FEDERAL_FUNDS_RATE(월평균 9월 3.75, 4월 3.64 → 상승 방향 확인). **미확보**: VIX(웹검색·Cboe CDN·Yahoo·stooq 모두 실패), 근원 CPI, PCE 2종, 목표금리 밴드 재확인 → 메일에 "직전 회차(10/15 FRED) 값 재사용"으로 명시(목표금리 3.75~4.00, 근원 CPI 9월 +2.57%, PCE 8월 +3.42/+3.01, VIX 15.27@10/13). **Regime: 금리 인상기 · VIX 미확인(직전 보통) · 장단기 정상(+1.15%p)**. 별점에는 반영 안 함(규정대로).
+- **데이터 수집**: stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow ×21)·Damodaran(pedata/vebitda 1회씩) 전부 curl(UA 미지정) HTTP200, Alpha Vantage 종목 폴백 0회(data_path 전부 normal). AV 무료 한도(25/일, 1/초)에 주의 — TREASURY_YIELD daily, CPI는 출력이 매우 커서(수만 자) 컨텍스트에 그대로 쏟아짐; 다음에는 파일 저장/필터 가능한 호출 방식을 권장.
+- **Damodaran**: 업종 매핑·값 이전 회차와 동일(데이터는 2026-01 기준 그대로, 이상치 없음). 컬럼: pedata "only money making firms", vebitda "Only positive EBITDA". INTC·MU(④)도 반도체 값 사용(관행 유지).
+- **신호 임계값**(고정 유지): a 할인≥8%, c·d 업종 대비 ≤-10%, e FCF Yield≥5%, ③그룹은 d(EV/Sales<2x)·e만.
+- **❓**: forward PER 소스괴리(≥15%): NVDA 23.1, AVGO 32.8, AMD 31.8 / 신호a·c 정면반대: AMD, GOOGL, BLK, LLY, UNH. **2건 중첩 = AMD만** → "데이터 불충분—판단보류", 매수★ 상한 ★★(실질 영향 없음; 자연 등급도 ★2). 데이터 완전성: 충분 20 / 부분적 0 / 불충분 1(AMD). (단독 ❓는 하드캡 없이 "충분" 유지 — 이전 회차 관행과 동일.)
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), CRWV·TEM(영업이익·FCF 2분기 연속 -) — 실질 영향 없음. INTC(④) 특례(최근 2분기 영업이익 흑자, TTM 적자 At Loss). SMCI(FCF +718.7M/-6,696M), GOOGL, BLK, LMT는 연속 아님.
+- **애널리스트 규칙**: 발동 없음(Sell 우세 없음).
+- **등급 변동(10/15 대비)**: 매수★ 상승 — NFLX 2→3(RSI 32.8), GOOGL 1→2, META 1→2, AVGO 2 유지; 하락 — MU 2→1(RSI 40.5로 고변동 임계 <40 이탈), SMCI 2→1, NVDA 2 유지, LMT 1 유지, 그 외 동일. 매도★ 2 — AAPL, BLK(RSI 65.5), LLY, UNH, LMT; 1 — MSFT, META, PLTR 등. 매도 ★3 이상 충족 없음.
+- **고변동군**: 매수★2 — INTC, CRWV; 나머지 ★1. 경계값 ⚠️ 발동 8종목(MSFT, AAPL, AVGO, CRWV, GOOGL, NFLX, UNH, GE) = 38% → ±2pt 제안 유지.
+- **📰 마커**: 예정 실적발표 1주 내 — META(10/21 장후), LMT(10/22), MSFT·GOOGL(10/28). 이미 지난 NFLX·GE(10/20)·BLK·JPM·UNH 제외. NVDA·AVGO·ORCL·CRWV는 stockanalysis에 Earnings Date 없음(마커 없음).
+- **"N회차 연속"**: history.csv에서 해당 티커 행을 뒤에서부터 직접 센 값(오늘 포함, append 후 총 11행). 최대 11(MSFT·AAPL·PLTR·TEM, 매수★1) ≤ 11행. RUN_LOG 과거 문구 재사용 없음. 이번 회차부터 각 티커 이력 11행이라 "축적 중" 문구 대신 "5회차 전 RSI → 오늘" 추세 서술(5회차 전 = append 전 history.csv의 뒤에서 5번째 행).
+- **방법론 이슈/제안**: (1) 주말 스킵 조건 추가(이번엔 평일). (2) ⚠️ ±3pt 발동률 38% → ±2pt 제안 유지. (3) forecast Forward PE 행 기반 소스괴리 ❓가 임계 근처에서 뒤집힘 — AV EARNINGS_ESTIMATES 대체 검토. (4) 🔗/💧 마커 대상 고정 목록(🔗: MSFT,NVDA,AVGO,AMD,ORCL,PLTR,SMCI,CRWV,GOOGL,META,INTC,MU / 💧: SMCI,CRWV,TEM,NFLX,BLK)·신호 임계값·④그룹 업종값 적용 명문화. (5) **FRED 점검 시 대체 규칙 명문화 제안**: AV(TREASURY_YIELD/CPI/FEDERAL_FUNDS_RATE) 사용 + VIX는 Cboe 공식 일간 CSV(cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv)가 도메인 허용 목록에 있으면 시도(이번엔 curl 응답 000, 샌드박스 미허용 추정) → "허용된 도메인"에 cdn.cboe.com 추가 검토. (6) 이메일 전송은 대량 수동 전사 위험 → 발송 후 재조회 검증 권장. (7) JPM(은행)은 EV/EBITDA·FCF 없음 → 분모 2(관행). (8) history.csv는 10/15 이후 10/16~10/21 사이 회차 기록이 없음(회차 번호 연속이나 날짜 갭).
+- **새로 시도할 무료 소스 후보**: Cboe VIX_History.csv(도메인 허용 시), Alpha Vantage 근원 지표는 없음 → PCE/근원 CPI는 FRED 복구 대기.
+- **브랜치 메모**: 세션 지정 개발 브랜치 claude/festive-thompson-13pgv1에 커밋·푸시(프롬프트의 main 푸시 지시는 세션 지시 우선).
+
+**프롬프트 업데이트 제안**: ① 주말(뉴욕 토·일) 스킵 조건 추가, ② ⚠️ 경계폭 ±3→±2pt, ③ 🔗/💧 마커 대상 및 신호 임계값(a≥8%, c·d ±10%, e≥5%)·④그룹 업종값 사용 명문화, ④ 이메일 전송 워크플로우(파일 생성→출력→그대로 전달→재조회 검증) 명문화, ⑤ curl UA 지정 금지 메모, ⑥ "5회차 전" RSI 추세 정의 명문화, ⑦ FRED 점검(HTML "Site Maintenance" 응답) 시 AV 대체 및 직전값 재사용 표기 규칙 명문화. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
 ## 2026-10-15 (KST) — 12회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-15"). 발송 후 재조회 검증은 생략(이번엔 send 응답 id만 확인). HTML 약 21K자, 파이썬 생성→출력→그대로 전달.
