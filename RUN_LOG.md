@@ -12,7 +12,7 @@
 - **Absolute 건전성 하한**: ORCL(FCF 4분기 연속 -), CRWV·TEM(영업이익·FCF 2분기 연속 -) — 실질 영향 없음. GOOGL·META·SMCI·BLK는 연속 아님. INTC(④) 특례.
 - **애널리스트 규칙**: 발동 없음(Sell 우세 없음).
 - **등급 변동(10/15 대비)**: 매수★ 상승 — GOOGL 1→3(RSI 38.7·낙폭 -20.5%·신호 2), META 1→3(RSI 30.7), NFLX 2→3(RSI 30.2); 하락(2→1, RSI 회복/상승) — AVGO, INTC, MU, AMD, SMCI, CRWV, JPM, BLK. 매도★ 상승 — BLK 1→2, LMT 1→2(RSI 77, 고평가 신호 0이라 ★2 폴백); 하락 — MSFT, AAPL, UNH 2→1.
-- **고변동군**: 매수★ 전원 ★1(RSI 40 이상), 매도★ 임계 충족 없음. 경계값 ⚠️ 발동 5종목(GOOGL, META, NFLX, UNH 외 표준군; 고변동군 0) — 발동률 낮아짐(4/21, 19%).
+- **고변동군**: 매수★ 전원 ★1(RSI 40 이상), 매도★ 임계 충족 없음. 경계값 ⚠️ 발동 4종목(GOOGL, META, NFLX, UNH; 고변동군 0) — 발동률 낮아짐(4/21, 19%).
 - **📰 마커**: MSFT·GOOGL(10/28 당일 장마감 후 발표 — 가격은 발표 전), INTC·LLY(10/29), AAPL·PLTR·TEM(11/2), AMD·SMCI(11/3). 기준: 오늘~+7일.
 - **데이터 완전성**: 충분 20 / 부분적 0 / 불충분 1(AMD).
 - **"N회차 연속"**: history.csv 해당 티커 행을 뒤에서부터 센 값(오늘 포함, 최대 11 = 오늘 기록 후 history 11행). N≥3일 때만 카드에 표기(MSFT·AAPL·PLTR·TEM 매수★1 11, ORCL 10, GE 매수★2 7). RUN_LOG 과거 문구 재사용 없음. "5회차 전 RSI" = history 직전 5번째 기록.
