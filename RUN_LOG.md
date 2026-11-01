@@ -1,5 +1,26 @@
 # RUN_LOG
 
+## 2026-11-02 (KST) — 13회차
+
+- **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-11-02", Gmail send id 1a19912c5232bdc6). 발송 후 재조회 검증은 생략. 12회차(10/15) 이후 약 2주 공백 후 실행.
+- **휴장일 체크**: 뉴욕 2026-11-01은 **일요일**(휴장일 목록 외) → 관행대로 진행, 시세는 10/30(금) 종가. 주말 스킵 조건 미반영 이슈 재현.
+- **데이터 수집**: FRED 8개·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow ×21)·Damodaran(pedata/vebitda 1회씩) 전부 curl HTTP200, Alpha Vantage 폴백 0회(data_path 전부 normal). FRED 성공, Damodaran 성공(데이터 기준일 2026-01, 값 이전 회차와 동일).
+- **FRED / Regime**: CPI(9월) +3.72%/근원 +2.57%, PCE(9월) +3.65%/+3.12%(YoY 날짜 기준), 목표금리 3.75~4.00(상단 6개월 전 3.75→4.00 = 상승 중), 10Y 4.98%(10/29), VIX 17.20(10/29). **Regime: 금리 인상기 · VIX 보통 · 장단기 정상(+0.98%p)**.
+- **신호/등급 규칙**(고정 유지): a 할인≥8%, c·d 업종 대비 ≤-10%, e FCF Yield≥5%, ③그룹 d(EV/Sales<2x)·e만. 고평가 신호 정의: PER·EV/EBITDA가 업종 +10% 이상, FCF Yield<2%, ③은 EV/Sales≥10. 매수★2=고점대비≤-5%&RSI<50(고변동 40), ★3=≤-10%&RSI<40(30)&저평가1+, ★4=≤-15%&RSI<30(20)&2+. 이평선 near=±1%.
+- **❓**: forward PER 소스괴리(≥15%): NVDA, AVGO, AMD, PLTR, GOOGL, LLY / 신호 a·c 정면반대: AMD, GOOGL, LLY, BLK, UNH. **2건 중첩 = AMD, GOOGL, LLY** → "데이터 불충분—판단보류" 명시, 매수★ 상한 ★★. 실제 영향: GOOGL(자연 ★4→Absolute ★3→★2).
+- **Absolute 건전성 하한**: GOOGL(FCF 2분기 연속 -, 캡 실제 적용), ORCL(FCF), CRWV·TEM(영업이익·FCF) — ORCL·CRWV·TEM은 영향 없음. INTC(④) 특례.
+- **애널리스트 규칙**: 발동 없음. 
+- **등급 요약**: 매수★3: NVDA, INTC, META, NFLX / ★2: MSFT, AVGO, AMD, CRWV, GOOGL, JPM, GE / 나머지 ★1. 매도★: LLY 3(RSI 77.9, 고평가3), LMT 2(RSI 75.5), 나머지 1. 경계값 ⚠️: AVGO, AMD, NFLX, BLK (4종목).
+- **📰**: AAPL(11/2), PLTR·TEM(11/2), AMD·SMCI(11/3). MSFT·GOOGL·META 등은 최근 발표 완료.
+- **데이터 완전성**: 충분 18 / 부분적 0 / 불충분 3(AMD, GOOGL, LLY).
+- **"N회차 연속"**: history.csv 해당 티커 매수★ 값을 뒤에서부터 직접 센 값(오늘 포함, 오늘 append 후 총 11행 이하). 서술 종목: AAPL 11, PLTR 11, TEM 11, ORCL 10, JPM 7, GE 7, AVGO 3, CRWV 3, AMD 2, LLY 2, UNH 2, LMT 2.
+- **방법론 이슈/제안**: (1) 주말 스킵 조건 추가(이번에도 일요일 실행). (2) ⚠️ ±3pt 발동률 4/21로 이번엔 낮음; ±2pt 제안은 보류. (3) forecast Forward PE 행은 열 정의가 불명확(마지막 비-Upgrade 값 사용)해 소스괴리 ❓가 6종목에서 발동 — Alpha Vantage EARNINGS_ESTIMATES로 대체 검토. (4) GOOGL은 trailing<forward 역전(일회성 이익 추정) + FCF 연속 마이너스(capex)로 Absolute 하한이 걸림 — 대규모 capex 기업에 FCF 기준이 과민한지 검토 필요. (5) 스크립트는 세션 간 지속 안 되므로 저장소에 공용 스크립트 보관 제안. (6) 이메일 HTML이 22K자로 수동 전사 부담이 큼 — 카드 간소화 또는 발송 방식 개선 제안.
+- **새로 시도할 무료 소스 후보**: Alpha Vantage EARNINGS_ESTIMATES(forward EPS 교차검증).
+- **브랜치 메모**: 세션 지정 개발 브랜치 claude/festive-thompson-y2dqdz에 커밋·푸시.
+
+**프롬프트 업데이트 제안**: ① 주말(뉴욕 토·일) 스킵 조건 추가, ② 신호 임계값(a≥8%, c·d ±10%, e≥5%)·고평가 신호 정의·이평선 near 기준 명문화, ③ forward PER 소스괴리 비교 기준 열 명시 또는 대체 소스 지정, ④ 이메일 카드 분량 가이드. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
 ## 2026-10-15 (KST) — 12회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-15"). 발송 후 재조회 검증은 생략(이번엔 send 응답 id만 확인). HTML 약 21K자, 파이썬 생성→출력→그대로 전달.
