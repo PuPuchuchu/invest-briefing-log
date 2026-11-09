@@ -1,5 +1,30 @@
 # RUN_LOG
 
+## 2026-11-10 (KST) — 13회차
+
+- **실행 결과**: 정상 발송(수신자 지정 주소, "[투자 스크리닝 브리핑] 2026-11-10"), send 응답 id 확인(재조회 검증 생략). 직전 회차(10/15) 이후 약 25일 공백.
+- **휴장일 체크**: 뉴욕 2026-11-09(월) 정상 거래일, 통과.
+- **데이터 품질 이슈(중요)**: stockanalysis main 페이지 가격이 종목별로 14:38~16:00 EST 시각이 섞인 캐시 스냅샷(일부 "Market open" 장중값, NVDA 등은 "At close"). 실행 시각(약 16:40 EST)에도 갱신되지 않음. 종가 일괄 기준이 아님 → 다음 회차 실행 시각을 장 마감 1시간 이상 뒤로 늦추는 것 검토.
+- **데이터 수집**: FRED 8개·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow ×21)·Damodaran(pedata/vebitda 1회씩) 전부 curl HTTP200, Alpha Vantage 폴백 0회(data_path 전부 normal). 스크립트는 세션 간 지속 안 되어 재작성.
+- **FRED / Regime**: CPI(9월) +3.72%/근원 +2.57%, PCE(9월) +3.65%/+3.12%, 목표금리 3.75~4.00(상단 6개월 전 3.75 → 상승 중), 10Y 4.86%(11/6), VIX 25.64(11/6, 11/5 28.18로 급등). **Regime: 금리 인상기 · VIX 경계 · 장단기 정상(+0.86%p)**.
+- **Damodaran**: 업종 매핑·값 이전 회차와 동일(데이터 기준 2026-01, 이상치 없음). 컬럼: pedata "only money making firms", vebitda "Only positive EBITDA". INTC·MU(④)도 반도체 값으로 c·d 평가(관행 유지).
+- **신호 임계값**(고정 유지): a 할인≥8%, c·d 업종 대비 ≤-10%, e FCF Yield≥5%, ③그룹은 d(EV/Sales<2x)·e만. 고평가 신호(매도용)=a 역(fwd≥trailing×1.08)·c·d 업종 대비 ≥+10%.
+- **❓**: forward PER 소스괴리(≥15%): NVDA 31.6, AVGO 47.7, AMD 86.1, PLTR 35.1, LLY 32.7 / 신호a·c 정면반대: AMD, GOOGL, BLK, LLY. **2건 중첩 = AMD·LLY** → "데이터 불충분—판단보류" 명시, 매수★ 상한 ★★(실질 영향 없음).
+- **Absolute 건전성 하한**: ORCL(FCF 2분기 연속 -), GOOGL(FCF 2분기 연속 -; 자연 등급 ★3이라 영향 없음), CRWV·TEM. INTC·MU(④) 특례.
+- **애널리스트 규칙**: 발동 없음.
+- **등급**: 매수 NVDA ★4(RSI 26.67·저평가3), GOOGL ★3, ★2: INTC·MU·AVGO·AMD·PLTR·SMCI·CRWV·META·NFLX·UNH, 나머지 ★1. 매도 ★2: BLK·LLY·GE, 나머지 ★1. VIX 30 미만이라 ★5 없음.
+- **경계값 ⚠️**: MSFT, AAPL, INTC, NFLX, LLY, GE.
+- **📰 마커**: CRWV(11/10). NVDA 11/17은 1주 범위 밖이라 미부여.
+- **데이터 완전성**: 충분 19 / 부분적 0 / 불충분 2(AMD, LLY).
+- **"N회차 연속"**: 이번 회차는 해당 표현 미사용(RSI 5회차 전 → 오늘 추세만 표시).
+- **방법론 이슈/제안**: (1) 주말 스킵 조건 추가 필요. (2) ⚠️ ±3pt 발동률 6/21 → ±2pt 제안 유지. (3) forecast Forward PE vs statistics 비교는 회계연도 정의 차이로 괴리가 매우 큼(5종목) — 임계값 상향(예: 30%) 또는 Alpha Vantage EARNINGS_ESTIMATES 대체 검토. (4) 가격 시각 혼재(위). (5) 🔗/💧 마커 대상 고정 목록 명문화(🔗: MSFT,NVDA,AVGO,AMD,ORCL,PLTR,SMCI,CRWV,GOOGL,META,INTC,MU / 💧: SMCI,CRWV,TEM,NFLX,BLK). (6) Damodaran 데이터가 2026-01 기준으로 갱신 지연.
+- **새로 시도할 무료 소스 후보**: 특별한 필요 없음.
+- **브랜치 메모**: 세션 지정 브랜치 claude/festive-thompson-agbpfz에 커밋·푸시(세션 지시 우선).
+
+**프롬프트 업데이트 제안**: ① 주말 스킵 조건, ② ⚠️ 경계폭 ±2pt, ③ 🔗/💧 마커 대상·신호 임계값·고평가 신호 정의 명문화, ④ forward PER 소스괴리 임계값 상향 또는 대체 소스, ⑤ 실행 시각을 장 마감 후 충분히 늦춰 종가 일괄 확보. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 반영 요망.
+
+---
+
 ## 2026-10-15 (KST) — 12회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-10-15"). 발송 후 재조회 검증은 생략(이번엔 send 응답 id만 확인). HTML 약 21K자, 파이썬 생성→출력→그대로 전달.
