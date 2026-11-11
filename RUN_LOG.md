@@ -1,5 +1,32 @@
 # RUN_LOG
 
+## 2026-11-12 (KST) — 14회차
+
+- **실행 결과**: 정상 발송(지정 수신자, "[투자 스크리닝 브리핑] 2026-11-12", Gmail id 1a1cc924faf734fd). HTML 약 25K자, 파이썬 생성→파일→출력→그대로 전달. 소요 약 20분.
+- **휴장일 체크**: 뉴욕 2026-11-11(수, 재향군인의날 — 증시 개장, 채권시장 휴장) 정상 거래일, 통과. 16:40 EST 실행, 종가는 stockanalysis `/api/quotes/s/{ticker}`(4:00 PM EST 종가·h52/l52) 사용. date_kst=2026-11-12.
+- **데이터 수집**: FRED 8개·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow/quote API ×21)·Damodaran(pedata/vebitda 1회씩) 전부 기본 curl로 HTTP200, Alpha Vantage 폴백 0회(data_path 전부 normal).
+- **FRED 조회**: 성공. CPI(2026년 10월) +3.95%/근원 +2.77% YoY(2025-10 결측 → 2025-09·11 평균 보간, 직전 회차와 동일 처리), PCE(2026년 9월) +3.65%/+3.12%(신규 발표 없음). 목표금리 3.75~4.00(상단 6개월 전 2026-05 3.75 → 4.00, 상승 중), 10Y 4.88%(11/9; 11/10 미게시), VIX 19.46(11/10). 스프레드 +0.88%p.
+- **Market Regime**: 금리 인상기 · VIX 보통 · 장단기 정상 (직전과 동일).
+- **Damodaran 조회**: 성공(값·매핑·컬럼 직전과 동일, 이상치 없음). pedata "only money making firms", vebitda "Only positive EBITDA".
+- **❓ 종목·원인**: forward PER 소스괴리 — NVDA 30.5%, AVGO 50.4%, AMD 86.0%, LLY 33.4% / 신호a·c 정면반대 — AMD, LLY, BLK, GOOGL(trailing<forward 역전). 2건 중첩 = AMD·LLY → "데이터 불충분—판단보류" 문구 명시(둘 다 자연 등급 ★1이라 실질 영향 없음). 밴드-RSI 관찰은 ❓ 미포함(참고 문장만).
+- **하드캡 적용**: 데이터불충분 AMD·LLY(실질 영향 없음). RSI 결측 없음.
+- **Absolute 건전성 하한**: ORCL(FCF), CRWV(FCF; 영업이익은 최근 분기 +207M로 흑자 전환), TEM(영업이익·FCF), GOOGL(FCF -9,065/-5,855M). GOOGL 자연 등급 ★3 = 상한, 나머지 ★1 — 실질 영향 없음. META는 최근 분기 FCF -1,157M이나 직전 분기 +1,746M로 연속 아님(다음 회차 주시). INTC(④) 특례.
+- **애널리스트 규칙**: 발동 없음(Sell 우세 없음; INTC·SMCI Hold).
+- **등급 변동(11/11 대비)**: 매수★ — NVDA 4→3(RSI 23.4→30.5, 표준 ★4 요건 <30 이탈), INTC 3→2(28.9→34.3), NFLX 3→2(39.1→43.7), AVGO·MU·AMD·PLTR·SMCI·CRWV 2→1(전반적 RSI 반등), MSFT 1→2(고점 -6.8%, RSI 47.2). 매도★ — AAPL 1→2(RSI 60.07, 52주 고점 근처); BLK·LLY·GE 2 유지.
+- **고변동군 임계값 적용 결과**: INTC ★2(RSI 34.27, ★3 요건 <30 미충족), MU ★1(45.17; 저평가 4/4지만 RSI 상한), PLTR·SMCI·CRWV·ORCL·TEM ★1. 매도 임계(70+) 충족 없음.
+- **경계값 ⚠️ 발동**: AAPL(60.07), NVDA(30.5), GOOGL(37.96), LLY(69.78), LMT(58.23) — 5종목(24%).
+- **📰**: NVDA(11/17 실적). CRWV는 11/10 발표 완료로 제외.
+- **데이터 완전성 분포**: 충분 19 / 부분적 0 / 불충분 2(AMD, LLY).
+- **"N회차 연속" 서술**: history.csv에서 해당 티커 기존 행을 뒤에서부터 세어 buy_stars 동일 행 수 + 오늘(최대 12 = 기존 11행 + 오늘, 카드에 "history.csv 12행 중" 병기). 사용: AAPL·TEM 매수★1 12회차, ORCL 매수★1 11회차, LLY·UNH·LMT 매수★1 3회차, GOOGL 매수★3 2회차, META 매수★2 2회차, BLK·JPM·GE 매수★1 2회차. RUN_LOG 문구 재사용 없음.
+- **RSI 추세 참고**: "5회차 전" = history.csv 해당 티커의 뒤에서 5번째 행(2026-10-07) + 직전 행(11/11) 병기.
+- **방법론 이슈/개선 아이디어**: (1) 하루 사이 RSI 반등(5~15pt)으로 고변동군 매수★2가 대거 ★1로 복귀 — 등급이 단일일 RSI에 민감, 2회차 평균 RSI 또는 히스테리시스(등급 하향은 경계 +3pt 넘어야) 검토. (2) forward PER 소스괴리 ❓가 NVDA·AVGO·AMD·LLY에서 매회 고정적으로 발생(정의 차이로 보임) — 폐지 또는 같은 회계연도끼리 비교로 재정의 제안 유지. (3) Absolute 하한의 "영업이익 흑자+FCF만 음수(capex)" 케이스(GOOGL·ORCL, 다음엔 META 가능) 처리 결정 필요. (4) 시세 소스 `/api/quotes/s/{ticker}` 고정, FRED 결측월 보간 규칙, 주말 스킵, ⚠️ ±2pt, 🔗/💧 목록·신호 임계값 명문화 제안 유지. (5) RSI <30인데 저평가 신호가 1개뿐인 경우의 폴백(현재 ★3 유지) 명문화 필요.
+- **새로 시도할 무료 소스 후보**: 없음(현 구성 안정적). forward EPS 비교용으로 Alpha Vantage EARNINGS_ESTIMATES 시험 여지만 유지.
+- **브랜치 메모**: 세션 지정 개발 브랜치 claude/festive-thompson-jnglyl에 커밋·푸시, 프롬프트 지시(main 푸시)에 따라 main에도 반영.
+
+**프롬프트 업데이트 제안**: ① 시세·52주밴드는 stockanalysis `/api/quotes/s/{ticker}` 종가로 고정, ② FRED 결측월 YoY 처리(인접월 평균 보간) 명문화, ③ forward PER 소스괴리 ❓ 폐지 또는 재정의, ④ Absolute 하한의 "FCF만 음수·영업이익 흑자" 처리 결정, ⑤ 등급 히스테리시스/RSI 평활 도입 검토, ⑥ 주말 스킵·⚠️ ±2pt·🔗/💧 목록·임계값 명문화. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
+
 ## 2026-11-11 (KST) — 13회차
 
 - **실행 결과**: 정상 발송(chks7788@gmail.com, "[투자 스크리닝 브리핑] 2026-11-11", Gmail id 1a1c76d3496f40ff). HTML 약 25K자, 파이썬 생성→출력→그대로 전달. 소요 약 25분.
