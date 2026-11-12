@@ -1,5 +1,33 @@
 # RUN_LOG
 
+## 2026-11-13 (KST) — 15회차
+
+- **실행 결과**: 정상 발송(지정 수신자, "[투자 스크리닝 브리핑] 2026-11-13", Gmail id 1a1d1b9507883164). HTML 약 28K자(인라인 스타일 축약), 파이썬 생성→파일→그대로 전달. 소요 약 25분.
+- **휴장일 체크**: 뉴욕 2026-11-12(목) 정상 거래일, 통과. 16:40 EST 실행, date_kst=2026-11-13.
+- **데이터 수집**: FRED 8개·stockanalysis(main/statistics/forecast/분기 income/분기 cash-flow/quote API ×21)·Damodaran(pedata/vebitda 각 1회) 전부 curl HTTP200. Alpha Vantage 폴백 0회(data_path 전부 normal).
+- **🔴 신규 이슈 — 시세 필드 오류 정정**: stockanalysis `/api/quotes/s/{ticker}` JSON에서 `cl`은 **전일 종가**(cl + c = p), `p`가 당일 4:00 PM 종가임을 확인(예: NVDA p 166.19 / cl 173.73 / c -7.54). 직전 2회차(11/11·11/12)는 `cl`을 썼기 때문에 history.csv의 해당 행 price·pct_off_52wk_high가 **하루 늦은 값**(11/11 행=11/9 종가, 11/12 행=11/10 종가로 추정). 이번 회차부터 `p` 사용. 과거 행은 스키마·데이터 무수정 원칙에 따라 그대로 두었으며 이메일 하단에 정정 공지 포함. RSI·이평선·PER은 statistics 페이지 값이라 영향 없음. 과거 2행 price 소급 수정 여부는 사용자 판단 요망.
+- **FRED 조회**: 성공. CPI(2026년 10월) +3.95%/근원 +2.77% YoY(2025-10 결측 → 2025-09·11 평균 보간 유지), PCE(2026년 9월) +3.65%/+3.12%(신규 발표 없음). 목표금리 3.75~4.00(상단 6개월 전 2026-05 3.75 → 4.00, 상승 중), 10Y 4.98%(11/10), VIX 17.49(11/11). 스프레드 +0.98%p.
+- **Market Regime**: 금리 인상기 · VIX 보통 · 장단기 정상 (직전과 동일).
+- **Damodaran 조회**: 성공(값·매핑·컬럼 직전과 동일, 이상치 없음). pedata "Aggregate Mkt Cap/Trailing Net Income (only money making firms)", vebitda "Only positive EBITDA firms / EV/EBITDA".
+- **❓ 종목·원인**: forward PER 소스괴리 — NVDA 30.8%, AVGO 48.6%, AMD 84.8%, LLY 32.4% / 신호a·c 정면반대 — AMD, LLY, BLK, GOOGL(trailing<forward 역전). 2건 중첩 = AMD·LLY → "데이터 불충분—판단보류" 문구 명시(자연 등급 ★1, 실질 영향 없음). 밴드-RSI 관찰은 ❓ 미포함(참고 문장만).
+- **하드캡 적용**: 데이터불충분 AMD·LLY(실질 영향 없음). RSI 결측 없음. NVDA ★4는 ❓ 1건뿐이라 하드캡 없음.
+- **Absolute 건전성 하한**: ORCL(FCF), CRWV(FCF), TEM(영업이익·FCF), GOOGL(FCF -9,065/-5,855M) — 모두 자연 등급 ≤★3이라 실질 영향 없음. META 최근 FCF -1,157M / 직전 +1,746M로 연속 아님. SMCI 최근 FCF -476M / 직전 +719M로 연속 아님(다음 분기 주시). INTC(④) 특례.
+- **애널리스트 규칙**: 발동 없음(Sell 우세 없음; INTC·SMCI Hold).
+- **등급 변동(11/12 대비)**: 매수★ — **NVDA 3→4**(RSI 30.5→25.47, 고점 -31.7%, 저평가 3/4; VIX 17.49<30이라 ★5 아님; 11/17 실적 📰), GOOGL 3→2(RSI 37.96→43.96), SMCI 1→2(43.36→37.50, 고변동 ★2 요건 <40). 매도★ — GE 2→1(64.27→58.34). AAPL·BLK·LLY 매도★2 유지.
+- **고변동군 임계값 적용 결과**: INTC ★2(RSI 33.54, ★3 요건 <30 미충족), SMCI ★2(37.50), MU ★1(43.81; 저평가 4/4지만 RSI 상한), PLTR ★1(41.90 — ★2 기준 <40 미충족), ORCL·CRWV·TEM ★1. 매도 임계(70+) 충족 없음.
+- **경계값 ⚠️ 발동**: AAPL(60.20), AVGO(59.50), AMD(57.48), META(41.35), NFLX(41.08), LLY(69.66), LMT(57.19), GE(58.34) — 8종목(38%).
+- **📰**: NVDA(11/17 실적).
+- **데이터 완전성 분포**: 충분 19 / 부분적 0 / 불충분 2(AMD, LLY).
+- **"N회차 연속" 서술**: history.csv 해당 티커 기존 12행을 뒤에서부터 세어 buy_stars 동일 행 수 + 오늘(최대 13 = 12행+오늘, 오늘 append 후 총 13행이므로 행 수 초과 없음). 사용: AAPL·TEM 매수★1 13회차, ORCL 매수★1 12회차, LLY·UNH·LMT 매수★1 4회차, META 매수★2 3회차, BLK·JPM·GE 매수★1 3회차, MSFT·INTC·NFLX 매수★2 / AVGO·MU·AMD·PLTR·CRWV 매수★1 2회차. RUN_LOG 문구 재사용 없음.
+- **RSI 추세 참고**: "5회차 전" = history.csv 해당 티커 뒤에서 5번째 행(2026-10-12) + 직전 행(11/12) 병기.
+- **방법론 이슈/개선 아이디어**: (1) **시세 필드 `p` 고정** 명문화 필요(위 정정 건). (2) NVDA가 하루 RSI 5pt 하락으로 ★3→★4 — 단일일 RSI 민감도 문제 재확인, 히스테리시스/2회차 평균 검토 제안 유지. (3) forward PER 소스괴리 ❓ 4종목 고정 발생 — 폐지 또는 재정의 제안 유지. (4) Absolute 하한 "영업이익 흑자+FCF만 음수"(GOOGL·ORCL) 처리 결정 필요. (5) ⚠️ ±3pt 발동률 38% → ±2pt 제안 유지. (6) RSI·이평선은 statistics 페이지(장중 캐시 가능)라 종가 기준 RSI와 미세 차이 가능 — 종가 시계열로 RSI 직접 계산(stockanalysis 일별 가격 또는 Alpha Vantage RSI) 검토.
+- **새로 시도할 무료 소스 후보**: Alpha Vantage RSI/TIME_SERIES_DAILY(종가 기준 RSI 검증용, 순차 1~2종목 시험). 그 외 없음.
+- **브랜치 메모**: 세션 지정 개발 브랜치 claude/festive-thompson-sn50i3에 커밋·푸시, 프롬프트 지시(main 푸시)에 따라 main에도 반영.
+
+**프롬프트 업데이트 제안**: ① 시세·52주밴드는 stockanalysis `/api/quotes/s/{ticker}`의 **`p`(당일 종가)** 필드로 고정(`cl`은 전일 종가 — 사용 금지), 과거 2회차 price 소급 정정 여부 결정, ② FRED 결측월 YoY 보간 규칙 명문화, ③ forward PER 소스괴리 ❓ 폐지 또는 재정의, ④ Absolute 하한의 "FCF만 음수·영업이익 흑자" 처리 결정, ⑤ 등급 히스테리시스/RSI 평활 도입 검토, ⑥ 주말 스킵·⚠️ ±2pt·🔗/💧 목록·임계값 명문화. 프롬프트는 스스로 수정할 수 없으므로 사용자 검토 후 라우틴 프롬프트에 반영 요망.
+
+---
+
 ## 2026-11-12 (KST) — 14회차
 
 - **실행 결과**: 정상 발송(지정 수신자, "[투자 스크리닝 브리핑] 2026-11-12", Gmail id 1a1cc924faf734fd). HTML 약 25K자, 파이썬 생성→파일→출력→그대로 전달. 소요 약 20분.
